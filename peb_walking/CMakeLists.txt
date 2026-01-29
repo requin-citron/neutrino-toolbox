@@ -80,8 +80,8 @@ endif()
 # =============================================================================
 # Base sources (shared by most tests)
 # =============================================================================
-set(BASE_SOURCES
-    ${PROJECT_SRC}/main.cpp
+file(GLOB BASE_SOURCES
+    ${PROJECT_SRC}/*.cpp
 )
 
 # Force C++ compilation
