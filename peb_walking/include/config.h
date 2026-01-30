@@ -5,7 +5,7 @@
 #include <windows.h>
 
 #include "pebteb.h"
-#include "hash_fnc.h"
+#include "utils.h"
 
 #if _DEBUG == 1
     #include <stdio.h>

@@ -52,6 +52,7 @@ add_compile_definitions(JM_XORSTR_HPP)
 # =============================================================================
 include_directories(
     ${PROJECT_INCLUDE}
+    ${PROJECT_ROOT}/../commons/include
 )
 
 # =============================================================================
@@ -74,7 +75,7 @@ endif()
 if(DEBUG_BUILD)
     set(LIBS -lmsvcrt -lkernel32 -lntdll)
 else()
-    set(LIBS -lkernel32 -lntdll)
+    set(LIBS -lmsvcrt -lkernel32 -lntdll)
 endif()
 
 # =============================================================================
@@ -82,6 +83,7 @@ endif()
 # =============================================================================
 file(GLOB BASE_SOURCES
     ${PROJECT_SRC}/*.cpp
+    ${PROJECT_ROOT}/../commons/src/*.cpp
 )
 
 # Force C++ compilation
