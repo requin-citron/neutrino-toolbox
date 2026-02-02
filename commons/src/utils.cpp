@@ -1,6 +1,6 @@
 #include "neutrino/utils.h"
 
-PWCHAR char_to_wchar(PCHAR str) {
+PWCHAR neutrino_char_to_wchar(PCHAR str) {
     if (str == NULL) return NULL;
 
     INT len = MultiByteToWideChar(CP_UTF8, 0, str, -1, NULL, 0);
@@ -13,7 +13,7 @@ PWCHAR char_to_wchar(PCHAR str) {
     return wstr;
 }
 
-PCHAR wchar_to_char(PWCHAR wstr) {
+PCHAR neutrino_wchar_to_char(PWCHAR wstr) {
     if (wstr == NULL) return NULL;
 
     INT len = WideCharToMultiByte(CP_UTF8, 0, wstr, -1, NULL, 0, NULL, NULL);

@@ -74,7 +74,7 @@ extern "C" VOID __main(){
 //         _inf("Module Name: %ws", buffer);
 //         _inf("---------------------------");
 
-//         if (hash_x65599((PCHAR)wchar_to_char(entry->BaseDllName.Buffer), entry->BaseDllName.Length / sizeof(WCHAR)) == 0x6A4ABC5B) {
+//         if (hash_x65599((PCHAR)neutrino_wchar_to_char(entry->BaseDllName.Buffer), entry->BaseDllName.Length / sizeof(WCHAR)) == 0x6A4ABC5B) {
 //             _inf("Found kernel32.dll, resolving functions...");
 //             resolv_functions((PBYTE)entry->DllBase);
 //         }

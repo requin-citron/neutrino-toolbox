@@ -18,7 +18,7 @@ PBYTE ldr_find_module(PPEB_LDR_DATA ldr, PCHAR target_module_name) {
         _inf("Module Name: %ls", buffer);
         _inf("---------------------------");
 
-        if (hash_x65599((PCHAR)wchar_to_char(entry->BaseDllName.Buffer), entry->BaseDllName.Length / sizeof(WCHAR)) == hash_x65599(target_module_name, lstrlenA(target_module_name))) {
+        if (hash_x65599((PCHAR)neutrino_wchar_to_char(entry->BaseDllName.Buffer), entry->BaseDllName.Length / sizeof(WCHAR)) == hash_x65599(target_module_name, lstrlenA(target_module_name))) {
             _inf("Found %s, resolving functions...", target_module_name);
             return (PBYTE)entry->DllBase;
         }
