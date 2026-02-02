@@ -119,9 +119,10 @@ INT main(){
 
     PHASHMAP func_map = init_function_map();
     insert_new_dll(func_map, "kernel32.dll");
+    insert_new_dll(func_map, "ADVAPI32.dll");
 
 #if _DEBUG == 1
-    hashmap_print(func_map);
+    // hashmap_print(func_map);
 #endif
 
     _inf("---------------------------");

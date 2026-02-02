@@ -13,7 +13,7 @@ PBYTE ldr_find_module(PPEB_LDR_DATA ldr, PCHAR target_module_name) {
         
         WCHAR buffer[MAX_PATH] = {0};
         wcsncpy_s(buffer, entry->BaseDllName.Buffer, entry->BaseDllName.Length / sizeof(WCHAR));
-        _inf("Module Name: %ws", buffer);
+        _inf("Module Name: %ls", buffer);
         _inf("---------------------------");
 
         if (hash_x65599((PCHAR)wchar_to_char(entry->BaseDllName.Buffer), entry->BaseDllName.Length / sizeof(WCHAR)) == hash_x65599(target_module_name, lstrlenA(target_module_name))) {
@@ -70,19 +70,13 @@ VOID resolv_functions(PHASHMAP func_map, PBYTE dllbaseaddr){
     PDWORD func_name_rva                  = (PDWORD)((PBYTE)dllbaseaddr + img_exp_dir->AddressOfNames);
     PWORD  func_ordinal                   = (PWORD)((PBYTE)dllbaseaddr + img_exp_dir->AddressOfNameOrdinals);
 
-    _inf("---------------------------");
-
     for (DWORD i = 0; i < img_exp_dir->NumberOfNames; ++i){
         PCHAR curr_func_name = (PCHAR)((PBYTE)dllbaseaddr + func_name_rva[i]);
         WORD ord             = func_ordinal[i];
         PVOID address        = (PVOID)((PBYTE)dllbaseaddr + func_addr[ord]);
 
-        _inf("Resolved %s at address: 0x%p", curr_func_name, address);
-        
         hashmap_insert(func_map, curr_func_name, lstrlenA(curr_func_name), address);
     }
-
-    _inf("---------------------------");
 
     return;
 }
@@ -98,8 +92,13 @@ BOOL insert_new_dll(PHASHMAP func_map, PCHAR dll_name) {
 
     PBYTE dll_base = ldr_find_module(ldr, dll_name);
     if (!dll_base) {
-        _err("Failed to find module: %s", dll_name);
-        return FALSE;
+
+        dll_base = (PBYTE)LoadLibraryA(dll_name);
+
+        if(dll_base == NULL){ // Failed to load the DLL
+            _err("Failed to load module: %s", dll_name);
+            return FALSE;
+        }
     }
 
     resolv_functions(func_map, dll_base);
