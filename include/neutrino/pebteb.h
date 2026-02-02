@@ -1,5 +1,5 @@
-#ifndef PEBTEB_H
-#define PEBTEB_H
+#ifndef NEUTRINO_PEBTEB_H
+#define NEUTRINO_PEBTEB_H
 
 #include <windows.h>
 
@@ -57,4 +57,4 @@ typedef struct _LDR_DATA_TABLE_ENTRY
     ULONG TimeDateStamp;                       // +0x80
 } LDR_DATA_TABLE_ENTRY, *PLDR_DATA_TABLE_ENTRY;
 
-#endif //PEBTEB_H
+#endif //NEUTRINO_PEBTEB_H

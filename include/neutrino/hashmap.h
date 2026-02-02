@@ -1,8 +1,7 @@
-#ifndef HASHMAP_H
-#define HASHMAP_H
+#ifndef NEUTRINO_HASHMAP_H
+#define NEUTRINO_HASHMAP_H
 
 #include <windows.h>
-#include "debug.h"
 
 #define HASHMAP_DEFAULT_SIZE 64
 
@@ -33,4 +32,4 @@ VOID hashmap_print(PHASHMAP map);
 
 #endif // _DEBUG == 1
 
-#endif //HASHMAP_H
+#endif //NEUTRINO_HASHMAP_H

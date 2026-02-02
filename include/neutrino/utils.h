@@ -1,5 +1,5 @@
-#ifndef UTILS_H
-#define UTILS_H
+#ifndef NEUTRINO_UTILS_H
+#define NEUTRINO_UTILS_H
 
 #include <windows.h>
 
@@ -10,4 +10,4 @@ PWCHAR char_to_wchar(PCHAR str);
 PCHAR wchar_to_char(PWCHAR wstr);
 UINT hash_x65599(PCHAR string, UINT len);
 
-#endif //UTILS_H
+#endif //NEUTRINO_UTILS_H

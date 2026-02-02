@@ -1,5 +1,6 @@
-#include "hashmap.h"
-#include "utils.h"
+#include "neutrino/hashmap.h"
+#include "neutrino/utils.h"
+#include "debug.h"
 
 DWORD hash_fnv1a(PBYTE data, SIZE_T len) {
     DWORD hash = 0x811c9dc5;

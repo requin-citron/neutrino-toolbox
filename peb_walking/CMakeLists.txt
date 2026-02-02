@@ -26,7 +26,7 @@ option(DEBUG_BUILD "Build with debug symbols and stdlib support" OFF)
 # =============================================================================
 set(PROJECT_ROOT ${CMAKE_SOURCE_DIR})
 set(PROJECT_SRC ${PROJECT_ROOT}/src)
-set(PROJECT_INCLUDE ${PROJECT_ROOT}/include)
+set(NEUTRINO_ROOT ${PROJECT_ROOT}/..)
 
 # =============================================================================
 # Compiler flags
@@ -51,8 +51,11 @@ add_compile_definitions(JM_XORSTR_HPP)
 # Include directories
 # =============================================================================
 include_directories(
-    ${PROJECT_INCLUDE}
-    ${PROJECT_ROOT}/../commons/include
+    # Public headers
+    ${NEUTRINO_ROOT}/include
+    # Private headers (local src directories)
+    ${PROJECT_SRC}
+    ${NEUTRINO_ROOT}/commons/src
 )
 
 # =============================================================================
@@ -83,7 +86,7 @@ endif()
 # =============================================================================
 file(GLOB BASE_SOURCES
     ${PROJECT_SRC}/*.cpp
-    ${PROJECT_ROOT}/../commons/src/*.cpp
+    ${NEUTRINO_ROOT}/commons/src/*.cpp
 )
 
 # Force C++ compilation
