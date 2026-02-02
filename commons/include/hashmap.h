@@ -2,6 +2,7 @@
 #define HASHMAP_H
 
 #include <windows.h>
+#include "debug.h"
 
 #define HASHMAP_DEFAULT_SIZE 64
 
@@ -25,5 +26,11 @@ VOID hashmap_destroy(PHASHMAP map);
 BOOL hashmap_insert(PHASHMAP map, PVOID key, SIZE_T key_len, PVOID value);
 PVOID hashmap_get(PHASHMAP map, PVOID key, SIZE_T key_len);
 BOOL hashmap_remove(PHASHMAP map, PVOID key, SIZE_T key_len);
+
+#if _DEBUG == 1
+
+VOID hashmap_print(PHASHMAP map);
+
+#endif // _DEBUG == 1
 
 #endif //HASHMAP_H

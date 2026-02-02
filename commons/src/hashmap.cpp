@@ -110,3 +110,22 @@ BOOL hashmap_remove(PHASHMAP map, PVOID key, SIZE_T key_len) {
 
     return FALSE;
 }
+
+#if _DEBUG == 1
+
+VOID hashmap_print(PHASHMAP map) {
+    if (!map) return;
+
+    for (DWORD i = 0; i < map->size; i++) {
+        PHASHMAP_ENTRY entry = map->buckets[i];
+        if (entry) {
+            _inf("Bucket %lu:", i);
+            while (entry) {
+                _inf("  Key: %s, Key Length: %llu, Value: %p", entry->key, entry->key_len, entry->value);
+                entry = entry->next;
+            }
+        }
+    }
+}
+
+#endif

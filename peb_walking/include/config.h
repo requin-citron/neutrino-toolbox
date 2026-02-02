@@ -6,6 +6,8 @@
 
 #include "pebteb.h"
 #include "utils.h"
+#include "hashmap.h"
+#include "peb_walking.h"
 
 #if _DEBUG == 1
     #include <stdio.h>
