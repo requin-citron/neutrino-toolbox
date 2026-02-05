@@ -1,6 +1,7 @@
 #include "config.h"
 
 typedef DWORD (WINAPI* fnGetCurrentProcessId)(VOID);
+typedef VOID (WINAPI* fnRtlMoveMemory)(PBYTE, PBYTE, SIZE_T);
 
 extern "C" VOID __main(){
     return;
@@ -118,6 +119,7 @@ INT main(){
     _inf("---------------------------");
 
     PHASHMAP func_map = init_function_map();
+    insert_new_dll(func_map, "ntdll.dll");
     insert_new_dll(func_map, "kernel32.dll");
     insert_new_dll(func_map, "ADVAPI32.dll");
 
@@ -127,14 +129,21 @@ INT main(){
 
     _inf("---------------------------");
     _inf("hashmap count: %lu", func_map->count);
-    CHAR test[] = "GetCurrentProcessId";
+    CHAR test[]  = "GetCurrentProcessId";
+    CHAR test2[] = "RtlMoveMemory";
 
     fnGetCurrentProcessId pGetCurrentProcessId = (fnGetCurrentProcessId)hashmap_get(func_map, test, lstrlenA(test));
+    fnRtlMoveMemory pRtlMoveMomory = (fnRtlMoveMemory)hashmap_get(func_map, test2, lstrlenA(test2));
+
+    _inf("resovled function %p\n", pRtlMoveMomory);
 
     if (pGetCurrentProcessId) {
         DWORD pid = pGetCurrentProcessId();
         _inf("Test call success! PID = %lu", pid);
     }
+
+    pRtlMoveMomory((PBYTE)test2, (PBYTE)"toto\0", 5);
+    _inf("debug %s", test2);
 
     // parse_linklist_inloadorder_module(&ldr->InLoadOrderModuleList);
     // parse_linklist_hashlinks_module(&ldr->InLoadOrderModuleList);
