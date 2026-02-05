@@ -13,6 +13,7 @@ PWCHAR neutrino_char_to_wchar(PCHAR str) {
     return wstr;
 }
 
+__attribute__((__annotate__(("substitution"))))
 PCHAR neutrino_wchar_to_char(PWCHAR wstr) {
     if (wstr == NULL) return NULL;
 
@@ -26,6 +27,7 @@ PCHAR neutrino_wchar_to_char(PWCHAR wstr) {
     return str;
 }
 
+__attribute__((__annotate__(("substitution,linearmba"))))
 UINT hash_x65599(PCHAR string, UINT len)
 {
     UINT hash = 0;

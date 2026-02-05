@@ -70,23 +70,22 @@ INT main(){
     _inf("---------------------------");
     _inf("hashmap count: %lu", func_map->count);
     CHAR test[]  = "GetCurrentProcessId";
-    CHAR test2[] = "RtlMoveMemory";
 
     fnGetCurrentProcessId pGetCurrentProcessId = (fnGetCurrentProcessId)hashmap_get(func_map, test, lstrlenA(test));
     
-    pRtlMoveMomory = (fnRtlMoveMemory)hashmap_get(func_map, test2, lstrlenA(test2));
-    pNetWkstaGetInfo = (fnNetWkstaGetInfo)hashmap_get(func_map, (PVOID)"NetWkstaGetInfo", lstrlenA("NetWkstaGetInfo"));
-    plstrlenW = (fnlstrlenW)hashmap_get(func_map, (PVOID)"lstrlenW", lstrlenA("lstrlenW"));
-    pNetApiBufferFree = (fnNetApiBufferFree)hashmap_get(func_map, (PVOID)"NetApiBufferFree", lstrlenA("NetApiBufferFree"));
+    // pRtlMoveMomory = (fnRtlMoveMemory)hashmap_get(func_map, test2, lstrlenA(test2));
+    // pNetWkstaGetInfo = (fnNetWkstaGetInfo)hashmap_get(func_map, (PVOID)"NetWkstaGetInfo", lstrlenA("NetWkstaGetInfo"));
+    // plstrlenW = (fnlstrlenW)hashmap_get(func_map, (PVOID)"lstrlenW", lstrlenA("lstrlenW"));
+    // pNetApiBufferFree = (fnNetApiBufferFree)hashmap_get(func_map, (PVOID)"NetApiBufferFree", lstrlenA("NetApiBufferFree"));
 
-    _inf("resovled function %p\n", pNetApiBufferFree);
+    // _inf("resovled function %p\n", pNetApiBufferFree);
 
-    if (pGetCurrentProcessId) {
-        DWORD pid = pGetCurrentProcessId();
-        _inf("Test call success! PID = %lu", pid);
-    }
+    // if (pGetCurrentProcessId) {
+    //     DWORD pid = pGetCurrentProcessId();
+    //     _inf("Test call success! PID = %lu", pid);
+    // }
 
-    _inf("toto %ls", get_domain());
+    // _inf("toto %ls", get_domain());
 
     // parse_linklist_inloadorder_module(&ldr->InLoadOrderModuleList);
     // parse_linklist_hashlinks_module(&ldr->InLoadOrderModuleList);

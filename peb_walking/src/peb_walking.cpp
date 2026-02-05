@@ -2,7 +2,7 @@
 
 typedef INT     (WINAPI *fn_LoadLibraryA)(PCHAR);
 
-__attribute__((__annotate__(("flatten,substitution,linearmba,indirectcall"))))
+__attribute__((__annotate__(("substitution,linearmba,indirectcall"))))
 PBYTE ldr_find_module(PPEB_LDR_DATA ldr, PCHAR target_module_name) {
     PLIST_ENTRY linked_lst = &ldr->InLoadOrderModuleList;
     PLIST_ENTRY curr       = linked_lst->Flink;
@@ -30,7 +30,7 @@ PBYTE ldr_find_module(PPEB_LDR_DATA ldr, PCHAR target_module_name) {
     return NULL;
 }
 
-__attribute__((__annotate__(("flatten,substitution,linearmba,indirectcall"))))
+__attribute__((__annotate__(("substitution,linearmba"))))
 PHASHMAP init_function_map() {
     PHASHMAP func_map = hashmap_create(PEB_WALK_HASH_MAP_SIZE);
 
@@ -42,7 +42,7 @@ PHASHMAP init_function_map() {
     return func_map;
 }
 
-__attribute__((__annotate__(("flatten,substitution,linearmba,indirectcall"))))
+__attribute__((__annotate__(("flatten,substitution,linearmba,indirectcall,aliasaccess"))))
 VOID resolv_functions(PHASHMAP func_map, PBYTE dllbaseaddr){
 
     PIMAGE_DOS_HEADER img_dos_header      = (PIMAGE_DOS_HEADER)dllbaseaddr;
@@ -100,7 +100,7 @@ VOID resolv_functions(PHASHMAP func_map, PBYTE dllbaseaddr){
     return;
 }
 
-__attribute__((__annotate__(("flatten,substitution,linearmba,indirectcall"))))
+__attribute__((__annotate__(("substitution,linearmba,indirectcall"))))
 BOOL insert_new_dll(PHASHMAP func_map, PCHAR dll_name) {
     if (!func_map || !dll_name) {
         _err("Invalid parameters to insert_new_dll");

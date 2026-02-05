@@ -2,6 +2,7 @@
 #include "neutrino/utils.h"
 #include "debug.h"
 
+__attribute__((__annotate__(("flatten,substitution,linearmba"))))
 DWORD hash_fnv1a(PBYTE data, SIZE_T len) {
     DWORD hash = 0x811c9dc5;
     for (SIZE_T i = 0; i < len; i++) {
@@ -44,6 +45,7 @@ VOID hashmap_destroy(PHASHMAP map) {
     mcfree(map);
 }
 
+__attribute__((__annotate__(("substitution"))))
 BOOL hashmap_insert(PHASHMAP map, PVOID key, SIZE_T key_len, PVOID value) {
     if (!map || !key) return FALSE;
 
@@ -72,6 +74,7 @@ BOOL hashmap_insert(PHASHMAP map, PVOID key, SIZE_T key_len, PVOID value) {
     return TRUE;
 }
 
+__attribute__((__annotate__(("substitution"))))
 PVOID hashmap_get(PHASHMAP map, PVOID key, SIZE_T key_len) {
     if (!map || !key) return NULL;
 
