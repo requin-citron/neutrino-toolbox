@@ -117,6 +117,8 @@ BOOL insert_new_dll(PHASHMAP func_map, PCHAR dll_name) {
 
         dll_base = (PBYTE)LoadLibraryA(dll_name);
 
+        _inf("Loaded %s at 0x%p", dll_name, dll_base);
+
         if(dll_base == NULL){ // Failed to load the DLL
             _err("Failed to load module: %s", dll_name);
             return FALSE;

@@ -6,6 +6,7 @@
 #include "neutrino/pebteb.h"
 #include "neutrino/utils.h"
 #include "debug.h"
+#include "xorstr.h"
 
 #define PEB_WALK_HASH_MAP_SIZE 4096*4*4
 
