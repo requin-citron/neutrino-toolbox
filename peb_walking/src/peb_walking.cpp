@@ -80,16 +80,16 @@ VOID resolv_functions(PHASHMAP func_map, PBYTE dllbaseaddr){
         WORD ord             = func_ordinal[i];
         DWORD func_rva       = func_addr[ord];
 
+        if(hashmap_get(func_map, curr_func_name, lstrlenA(curr_func_name)) != NULL){
+            continue; // Function already resolved
+        }
+
         // Skip forwarded exports (RVA points inside export directory)
         if (func_rva >= export_start && func_rva < export_end) {
             continue;
         }
 
         PVOID address = (PVOID)((PBYTE)dllbaseaddr + func_rva);
-
-        if (lstrcmpA(curr_func_name, "RtlMoveMemory") == 0){
-            _inf("RtlMoveMemory found at: 0x%p", address);
-        }
 
         hashmap_insert(func_map, curr_func_name, lstrlenA(curr_func_name), address);
     }
