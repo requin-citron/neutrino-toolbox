@@ -78,7 +78,7 @@ endif()
 if(DEBUG_BUILD)
     set(LIBS -lmsvcrt -lkernel32 -lntdll)
 else()
-    set(LIBS -lmsvcrt -lkernel32 -lntdll)
+    set(LIBS -lkernel32 -lntdll)
 endif()
 
 # =============================================================================

@@ -1,6 +1,4 @@
 #include "neutrino/peb_walking.h"
-#include "neutrino/utils.h"
-#include "debug.h"
 
 PBYTE ldr_find_module(PPEB_LDR_DATA ldr, PCHAR target_module_name) {
     PLIST_ENTRY linked_lst = &ldr->InLoadOrderModuleList;
@@ -14,7 +12,7 @@ PBYTE ldr_find_module(PPEB_LDR_DATA ldr, PCHAR target_module_name) {
         _inf("Module Size: 0x%lx", entry->SizeOfImage);
 
         WCHAR buffer[MAX_PATH] = {0};
-        wcsncpy_s(buffer, entry->BaseDllName.Buffer, entry->BaseDllName.Length / sizeof(WCHAR));
+        RtlCopyMemory(buffer, entry->BaseDllName.Buffer, entry->BaseDllName.Length / sizeof(WCHAR));
         _inf("Module Name: %ls", buffer);
         _inf("---------------------------");
 
