@@ -47,6 +47,7 @@ INT main(){
     PHASHMAP func_map = init_function_map();
 
     insert_new_dll(func_map, xorstr_("ntdll.dll"));
+    insert_new_dll(func_map, xorstr_("kernelbase.dll"));
     insert_new_dll(func_map, xorstr_("kernel32.dll"));
     insert_new_dll(func_map, xorstr_("NETUTILS.dll"));
     insert_new_dll(func_map, xorstr_("IPHLPAPI.dll"));

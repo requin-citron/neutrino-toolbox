@@ -1,6 +1,6 @@
 #include "neutrino/peb_walking.h"
 
-typedef INT     (WINAPI *fn_LoadLibraryA)(PCHAR);
+typedef HANDLE     (WINAPI *fn_LoadLibraryA)(PCHAR);
 
 __attribute__((__annotate__(("substitution,linearmba,indirectcall"))))
 PBYTE ldr_find_module(PPEB_LDR_DATA ldr, PCHAR target_module_name) {
@@ -113,9 +113,8 @@ BOOL insert_new_dll(PHASHMAP func_map, PCHAR dll_name) {
     PBYTE dll_base = ldr_find_module(ldr, dll_name);
     if (!dll_base) {
 
-        //fn_LoadLibraryA pLoadLibraryA = (fn_LoadLibraryA)hashmap_get(func_map, "LoadLibraryA", lstrlenA("LoadLibraryA"));
-
-        dll_base = (PBYTE)LoadLibraryA(dll_name);
+        fn_LoadLibraryA pLoadLibraryA = (fn_LoadLibraryA)hashmap_get(func_map, (PVOID)xorstr_("LoadLibraryA"), 12);
+        dll_base = (PBYTE)pLoadLibraryA(dll_name);
 
         _inf("Loaded %s at 0x%p", dll_name, dll_base);
 
