@@ -2,7 +2,7 @@
 #include "neutrino/utils.h"
 #include "debug.h"
 
-__attribute__((__annotate__(("substitution,linearmba"))))
+__attribute__((__annotate__(("substitution"))))
 DWORD hash_fnv1a(PBYTE data, SIZE_T len) {
     DWORD hash = 0x811c9dc5;
     for (SIZE_T i = 0; i < len; i++) {

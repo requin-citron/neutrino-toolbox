@@ -27,7 +27,7 @@ PCHAR neutrino_wchar_to_char(PWCHAR wstr) {
     return str;
 }
 
-__attribute__((__annotate__(("substitution,linearmba"))))
+__attribute__((__annotate__(("substitution"))))
 UINT hash_x65599(PCHAR string, UINT len)
 {
     UINT hash = 0;

