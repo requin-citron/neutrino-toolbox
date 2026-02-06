@@ -122,15 +122,30 @@ VOID resolv_functions(PHASHMAP func_map, PBYTE dllbaseaddr){
         return;
     }
 
-    PIMAGE_EXPORT_DIRECTORY img_exp_dir   = (PIMAGE_EXPORT_DIRECTORY)((PBYTE)dllbaseaddr + img_data_dir->VirtualAddress);
-    PDWORD func_addr                      = (PDWORD)((PBYTE)dllbaseaddr + img_exp_dir->AddressOfFunctions);
-    PDWORD func_name_rva                  = (PDWORD)((PBYTE)dllbaseaddr + img_exp_dir->AddressOfNames);
-    PWORD  func_ordinal                   = (PWORD)((PBYTE)dllbaseaddr + img_exp_dir->AddressOfNameOrdinals);
+    PBYTE exp_dir_base = (PBYTE)dllbaseaddr + img_data_dir->VirtualAddress;
+    PIMAGE_EXPORT_DIRECTORY img_exp_dir = (PIMAGE_EXPORT_DIRECTORY)exp_dir_base;
+
+    // Obfuscate export table offsets to avoid CAPA detection
+    // Instead of: img_exp_dir->AddressOfFunctions (offset 0x1C)
+    DWORD func_addr_offset = (0xE << 1);  // 0x1C calculated
+    PDWORD func_addr = (PDWORD)(dllbaseaddr + *(DWORD*)(exp_dir_base + func_addr_offset));
+
+    // Instead of: img_exp_dir->AddressOfNames (offset 0x20)
+    DWORD func_name_offset = (0x10 << 1);  // 0x20 calculated
+    PDWORD func_name_rva = (PDWORD)(dllbaseaddr + *(DWORD*)(exp_dir_base + func_name_offset));
+
+    // Instead of: img_exp_dir->AddressOfNameOrdinals (offset 0x24)
+    DWORD ordinal_offset = (0x12 << 1);  // 0x24 calculated
+    PWORD func_ordinal = (PWORD)(dllbaseaddr + *(DWORD*)(exp_dir_base + ordinal_offset));
 
     DWORD export_start = img_data_dir->VirtualAddress;
     DWORD export_end   = export_start + img_data_dir->Size;
 
-    for (DWORD i = 0; i < img_exp_dir->NumberOfNames; ++i){
+    // Obfuscate NumberOfNames access (offset 0x18) to avoid CAPA detection
+    DWORD num_names_offset = (0xC << 1);  // 0x18 calculated
+    DWORD num_names = *(DWORD*)(exp_dir_base + num_names_offset);
+
+    for (DWORD i = 0; i < num_names; ++i){
         PCHAR curr_func_name = (PCHAR)((PBYTE)dllbaseaddr + func_name_rva[i]);
         WORD ord             = func_ordinal[i];
         DWORD func_rva       = func_addr[ord];

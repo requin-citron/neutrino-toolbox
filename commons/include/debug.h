@@ -20,6 +20,8 @@
 #define _log_no_newline(level, format, ...) printf("[%s] %s:%d - " format, level, __FUNCTION__, __LINE__, ## __VA_ARGS__);
 #define _inf_no_newline(format, ...) _log_no_newline(INF, format, ## __VA_ARGS__)
 
+#define API(x) x
+
 #else
 
 #define _log_no_format(format, ...)
