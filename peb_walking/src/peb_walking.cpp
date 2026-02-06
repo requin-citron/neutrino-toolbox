@@ -2,6 +2,8 @@
 
 typedef HANDLE     (WINAPI *fn_LoadLibraryA)(PCHAR);
 
+static PPEB g_peb = NULL;
+
 // Validate TEB pointer
 __attribute__((__annotate__(("substitution"))))
 static BOOL is_valid_teb(PTEB teb) {
@@ -58,21 +60,24 @@ PPEB get_peb_stealth() {
 __attribute__((__annotate__(("substitution,indirectcall"))))
 PBYTE ldr_find_module(PPEB_LDR_DATA ldr, PCHAR target_module_name) {
     PLIST_ENTRY linked_lst = &ldr->InLoadOrderModuleList;
-    PLIST_ENTRY curr       = linked_lst->Flink;
+    PLIST_ENTRY curr       = linked_lst->Blink;
 
 
     while(linked_lst != curr){
         PLDR_DATA_TABLE_ENTRY entry = CONTAINING_RECORD(curr, LDR_DATA_TABLE_ENTRY, InLoadOrderLinks);
 
-        WCHAR buffer[MAX_PATH] = {0};
-        RtlCopyMemory(buffer, entry->BaseDllName.Buffer, entry->BaseDllName.Length / sizeof(WCHAR));
+        PCHAR buffer = (PCHAR)neutrino_wchar_to_char(entry->BaseDllName.Buffer);
 
-        if (hash_x65599((PCHAR)neutrino_wchar_to_char(entry->BaseDllName.Buffer), entry->BaseDllName.Length / sizeof(WCHAR)) == hash_x65599(target_module_name, lstrlenA(target_module_name))) {
+        if (hash_x65599(buffer, entry->BaseDllName.Length / sizeof(WCHAR)) == hash_x65599(target_module_name, lstrlenA(target_module_name))) {
+            
             _inf("Found %s, resolving functions...", target_module_name);
+            mcfree(buffer);
+
             return (PBYTE)entry->DllBase;
         }
+        mcfree(buffer);
 
-        curr = curr->Flink;
+        curr = curr->Blink;
     }
 
     return NULL;
@@ -174,13 +179,16 @@ BOOL insert_new_dll(PHASHMAP func_map, PCHAR dll_name) {
         return FALSE;
     }
 
-    PPEB peb = get_peb_stealth();
-    if (!peb) {
-        _err("Failed to resolve PEB");
-        return FALSE;
-    }
+    if(g_peb == NULL){
+        if (!(g_peb = get_peb_stealth())) {
+            _err("Failed to resolve PEB");
+            return FALSE;
+        }
 
-    PEB_LDR_DATA* ldr = (PEB_LDR_DATA*)peb->Ldr;
+    }
+    
+
+    PEB_LDR_DATA* ldr = (PEB_LDR_DATA*)g_peb->Ldr;
 
     PBYTE dll_base = ldr_find_module(ldr, dll_name);
     if (!dll_base) {

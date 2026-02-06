@@ -46,19 +46,21 @@ PWSTR get_domain(){
 INT main(){
 
     _inf("Starting PEB walking demo...");
-    _inf("teb with self-reference: %p", get_teb_self_reference());
+    _inf("test peb resolution: %p", get_peb_stealth());
 
     PHASHMAP func_map = init_function_map();
 
-    hashmap_insert(func_map, (PVOID)xorstr_("NetWkstaGetInfo"), 16, (PVOID)0xdeadbeef); // Test insert and get
-    PVOID toto = hashmap_get(func_map, (PVOID)xorstr_("NetWkstaGetInfo"), 16); // Test get existing key
+    // hashmap_insert(func_map, (PVOID)xorstr_("NetWkstaGetInfo"), 16, (PVOID)0xdeadbeef); // Test insert and get
+    // PVOID toto = hashmap_get(func_map, (PVOID)xorstr_("NetWkstaGetInfo"), 16); // Test get existing key
 
-    insert_new_dll(func_map, xorstr_("ntdll.dll"));
+
+    insert_new_dll(func_map, xorstr_("ntdll.dll")); // Test non-existing DLL
     insert_new_dll(func_map, xorstr_("kernelbase.dll"));
     insert_new_dll(func_map, xorstr_("kernel32.dll"));
     insert_new_dll(func_map, xorstr_("NETUTILS.dll"));
     insert_new_dll(func_map, xorstr_("IPHLPAPI.dll"));
     insert_new_dll(func_map, xorstr_("NETAPI32.dll"));
+    
 #if _DEBUG == 1
     // hashmap_print(func_map);
 #endif

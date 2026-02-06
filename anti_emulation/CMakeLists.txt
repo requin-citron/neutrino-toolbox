@@ -11,7 +11,7 @@ set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
 set(TARGET_TRIPLE "x86_64-w64-mingw32")
 set(MINGW_ROOT "/usr/x86_64-w64-mingw32" CACHE PATH "MinGW sysroot")
 
-project(peb_walking LANGUAGES CXX)
+project(anti_emulation LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -103,8 +103,8 @@ file(GLOB BASE_SOURCES
 # Force C++ compilation
 set_source_files_properties(${BASE_SOURCES} PROPERTIES LANGUAGE CXX)
 
-add_executable(peb_walking ${BASE_SOURCES})
-target_link_libraries(peb_walking PRIVATE ${LIBS})
+add_executable(anti_emulation ${BASE_SOURCES})
+target_link_libraries(anti_emulation PRIVATE ${LIBS})
 
 if(DEBUG_BUILD)
     set(OUTPUT_SUFFIX "_debug")
@@ -112,8 +112,8 @@ else()
     set(OUTPUT_SUFFIX "_release")
 endif()
 
-set_target_properties(peb_walking PROPERTIES
+set_target_properties(anti_emulation PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}
-    OUTPUT_NAME "peb_walking${OUTPUT_SUFFIX}"
+    OUTPUT_NAME "anti_emulation${OUTPUT_SUFFIX}"
     SUFFIX ".exe"
 )

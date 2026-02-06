@@ -1,4 +1,5 @@
 #include "neutrino/utils.h"
+#include "debug.h"
 
 PWCHAR neutrino_char_to_wchar(PCHAR str) {
     if (str == NULL) return NULL;
@@ -30,10 +31,12 @@ PCHAR neutrino_wchar_to_char(PWCHAR wstr) {
 __attribute__((__annotate__(("substitution"))))
 UINT hash_x65599(PCHAR string, UINT len)
 {
-    UINT hash = 0;
+    UINT hash       = 0;
+    DWORD constante = ((0x1337 ^ 0x1337) | 1) * (((131198 >> 1) - 0) + ((~0u + 1) & 0)) + (0x45 ^ 0x45); // 65599 calculated at runtime to obfuscate the constant
+
     for(UINT i = 0; i < len; ++i)
     {
-       hash = 65599 * hash + string[i];
+       hash = constante * hash + string[i];
     }
     return hash ^ (hash >> 16);
 }
