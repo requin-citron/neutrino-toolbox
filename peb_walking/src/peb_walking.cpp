@@ -2,18 +2,57 @@
 
 typedef HANDLE     (WINAPI *fn_LoadLibraryA)(PCHAR);
 
-// Stealth PEB resolution via TEB self-reference
-// Safer than __readgsqword(0x60) - no literal 0x60 constant
+// Validate TEB pointer
+__attribute__((__annotate__(("substitution"))))
+static BOOL is_valid_teb(PTEB teb) {
+    if (!teb) return FALSE;
+    if ((ULONG_PTR)teb < 0x1000) return FALSE;
+    if ((ULONG_PTR)teb > 0x7FFFFFFFFFFF) return FALSE;
+
+    // Check if PEB pointer looks valid
+    PPEB peb = teb->ProcessEnvironmentBlock;
+    if (!peb) return FALSE;
+    if ((ULONG_PTR)peb < 0x1000) return FALSE;
+    if ((ULONG_PTR)peb > 0x7FFFFFFFFFFF) return FALSE;
+
+    // Check if TEB.NtTib.Self points to itself
+    if (teb->NtTib.Self != (PNT_TIB)teb) return FALSE;
+
+    return TRUE;
+}
+
+// Method 1: TEB self-reference (Primary - Fast & Stealthy)
+// Uses gs:0x30 instead of gs:0x60 to avoid detection
 __attribute__((__annotate__(("substitution,linearmba"))))
-PPEB get_peb_stealth() {
-    // TEB->Self is at gs:0x30 on x64 (NT_TIB.Self field)
+PTEB get_teb_self_reference() {
     // Calculate offset 0x30 at runtime to avoid signatures
     DWORD64 teb_self_offset = (0x18 << 1) | 0x10;  // = 0x30
 
     // Read TEB pointer from gs:0x30 (TEB.NtTib.Self)
     PTEB teb = (PTEB)__readgsqword(teb_self_offset);
 
-    return teb->ProcessEnvironmentBlock;
+    if (is_valid_teb(teb)) {
+        return teb;
+    }
+
+    return NULL;
+}
+
+// Main function: Cascading fallback for maximum reliability
+__attribute__((__annotate__(("substitution,linearmba,indirectcall"))))
+PPEB get_peb_stealth() {
+    PTEB teb = NULL;
+
+    // Try Method 1: Self-reference (fast, stealthy)
+    teb = get_teb_self_reference();
+    if (teb && teb->ProcessEnvironmentBlock) {
+        return teb->ProcessEnvironmentBlock;
+    }
+
+    // TODO - Other Method
+
+    // All methods failed
+    return NULL;
 }
 
 __attribute__((__annotate__(("substitution,linearmba,indirectcall"))))

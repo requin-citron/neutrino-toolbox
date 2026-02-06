@@ -44,6 +44,10 @@ PWSTR get_domain(){
 }
 
 INT main(){
+
+    _inf("Starting PEB walking demo...");
+    _inf("teb with self-reference: %p", get_teb_self_reference());
+
     PHASHMAP func_map = init_function_map();
 
     hashmap_insert(func_map, (PVOID)xorstr_("NetWkstaGetInfo"), 16, (PVOID)0xdeadbeef); // Test insert and get

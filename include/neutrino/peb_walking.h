@@ -10,6 +10,7 @@
 
 #define PEB_WALK_HASH_MAP_SIZE 4096*4*4
 
+PTEB get_teb_self_reference();
 PPEB get_peb_stealth();
 PBYTE ldr_find_module(PPEB_LDR_DATA ldr, PCHAR target_module_name);
 PHASHMAP init_function_map();
