@@ -1,5 +1,5 @@
-#ifndef PEB_WALKING_CONFIG_H
-#define PEB_WALKING_CONFIG_H
+#ifndef PEB_WALKING_MAIN_H
+#define PEB_WALKING_MAIN_H
 
 #include <windows.h>
 #include "debug.h"
@@ -13,4 +13,4 @@
     #include <stdio.h>
 #endif
 
-#endif //PEB_WALKING_CONFIG_H
+#endif //PEB_WALKING_MAIN_H

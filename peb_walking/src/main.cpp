@@ -1,4 +1,4 @@
-#include "config.h"
+#include "main.h"
 #include "xorstr.h"
 #include <iphlpapi.h>
 #include <lm.h>
@@ -45,6 +45,9 @@ PWSTR get_domain(){
 
 INT main(){
     PHASHMAP func_map = init_function_map();
+
+    hashmap_insert(func_map, (PVOID)xorstr_("NetWkstaGetInfo"), 16, (PVOID)0xdeadbeef); // Test insert and get
+    PVOID toto = hashmap_get(func_map, (PVOID)xorstr_("NetWkstaGetInfo"), 16); // Test get existing key
 
     insert_new_dll(func_map, xorstr_("ntdll.dll"));
     insert_new_dll(func_map, xorstr_("kernelbase.dll"));

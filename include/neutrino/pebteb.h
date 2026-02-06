@@ -57,4 +57,21 @@ typedef struct _LDR_DATA_TABLE_ENTRY
     ULONG TimeDateStamp;                       // +0x80
 } LDR_DATA_TABLE_ENTRY, *PLDR_DATA_TABLE_ENTRY;
 
+typedef struct _CLIENT_ID
+{
+    HANDLE UniqueProcess;         // +0x00
+    HANDLE UniqueThread;          // +0x08
+} CLIENT_ID, *PCLIENT_ID;
+
+typedef struct _TEB
+{
+    NT_TIB NtTib;                 // +0x00
+    PVOID EnvironmentPointer;     // +0x38
+    CLIENT_ID ClientId;           // +0x40
+    PVOID ActiveRpcHandle;        // +0x50
+    PVOID ThreadLocalStoragePointer; // +0x58
+    PPEB ProcessEnvironmentBlock; // +0x60 (This is what we need!)
+    // Snipped (rest not needed)
+} TEB, *PTEB;
+
 #endif //NEUTRINO_PEBTEB_H

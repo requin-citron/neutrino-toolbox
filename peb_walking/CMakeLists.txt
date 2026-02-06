@@ -5,7 +5,7 @@ cmake_minimum_required(VERSION 3.20)
 # =============================================================================
 set(CMAKE_SYSTEM_NAME Windows)
 set(CMAKE_SYSTEM_PROCESSOR x86_64)
-set(CMAKE_CXX_COMPILER clang++)
+set(CMAKE_CXX_COMPILER /opt/Polaris-Obfuscator/src/build/bin/clang++ -mllvm -passes=fla,mba,indcall,bcf,sub)
 set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
 
 set(TARGET_TRIPLE "x86_64-w64-mingw32")
@@ -35,13 +35,15 @@ add_compile_options(
     --target=${TARGET_TRIPLE}
     -Wall
     -Wextra
+    -ffunction-sections
+    -fdata-sections
 )
 
 if(DEBUG_BUILD)
     add_compile_options(-g -O0)
     add_compile_definitions(_DEBUG=1)
 else()
-    add_compile_options(-O2 -fno-builtin -ffreestanding)
+    add_compile_options(-O0 -fno-builtin -ffreestanding -fno-ident)
     add_compile_definitions(_DEBUG=0)
 endif()
 
@@ -56,6 +58,8 @@ include_directories(
     # Private headers (local src directories)
     ${PROJECT_SRC}
     ${NEUTRINO_ROOT}/commons/src
+    # Internal headers (not part of public API)
+    ${NEUTRINO_ROOT}/commons/include
 )
 
 # =============================================================================
@@ -66,10 +70,11 @@ add_link_options(
     --target=${TARGET_TRIPLE}
     -fuse-ld=lld
     -L${MINGW_ROOT}/lib
+    -Wl,--gc-sections
 )
 
 if(NOT DEBUG_BUILD)
-    add_link_options(-nostdlib -nostartfiles)
+    add_link_options(-nostdlib -nostartfiles -s -Wl,--build-id=none)
 endif()
 
 # =============================================================================
@@ -78,7 +83,7 @@ endif()
 if(DEBUG_BUILD)
     set(LIBS -lmsvcrt -lkernel32 -lntdll)
 else()
-    set(LIBS -lkernel32 -lntdll)
+    set(LIBS)
 endif()
 
 # =============================================================================
