@@ -43,10 +43,10 @@ add_compile_options(
 )
 
 if(DEBUG_BUILD)
-    add_compile_options(-g -O0 -fno-exceptions -fno-rtti)
+    add_compile_options(-g -O1 -fno-exceptions -fno-rtti)
     add_compile_definitions(_DEBUG=1)
 else()
-    add_compile_options(-O0 -fno-builtin -ffreestanding -fno-ident -fno-exceptions -fno-rtti)
+    add_compile_options(-O1 -fno-builtin -ffreestanding -fno-ident -fno-exceptions -fno-rtti)
     add_compile_definitions(_DEBUG=0)
 endif()
 

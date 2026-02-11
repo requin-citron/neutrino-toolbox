@@ -67,7 +67,6 @@ PBYTE ldr_find_module(PPEB_LDR_DATA ldr, PCHAR target_module_name) {
         PLDR_DATA_TABLE_ENTRY entry = CONTAINING_RECORD(curr, LDR_DATA_TABLE_ENTRY, InLoadOrderLinks);
 
         PCHAR buffer = (PCHAR)neutrino_wchar_to_char(entry->BaseDllName.Buffer);
-
         if (hash_x65599(buffer, entry->BaseDllName.Length / sizeof(WCHAR)) == hash_x65599(target_module_name, lstrlenA(target_module_name))) {
             
             _inf("Found %s, resolving functions...", target_module_name);
@@ -196,14 +195,12 @@ BOOL insert_new_dll(PHASHMAP func_map, PCHAR dll_name) {
         fn_LoadLibraryA pLoadLibraryA = (fn_LoadLibraryA)hashmap_get(func_map, (PVOID)xorstr_("LoadLibraryA"), 12);
         dll_base = (PBYTE)pLoadLibraryA(dll_name);
 
-        _inf("Loaded %s at 0x%p", dll_name, dll_base);
-
         if(dll_base == NULL){ // Failed to load the DLL
             _err("Failed to load module: %s", dll_name);
             return FALSE;
         }
     }
-
+    _inf("starting to resolve functions for %s", dll_name);
     resolv_functions(func_map, dll_base);
 
     return TRUE;
