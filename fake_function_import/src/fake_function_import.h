@@ -13,7 +13,6 @@
  *   - PROFILE_DOCUMENT: Document processor (GDI, COM, printing)
  *   - PROFILE_NETWORK: Network client (HTTP, sockets, crypto)
  *   - PROFILE_SYSTEM: System utility (registry, services, processes)
- *   - PROFILE_MEDIA: Media application (audio, video, Media Foundation)
  */
 
 #ifndef FAKE_FUNCTION_IMPORT_H
@@ -37,7 +36,6 @@ extern "C" {
  *   - PROFILE_DOCUMENT=1 → Document processing application
  *   - PROFILE_NETWORK=1 → Network client application
  *   - PROFILE_SYSTEM=1 → System administration utility
- *   - PROFILE_MEDIA=1 → Multimedia application
  *
  * Execution strategy: EXEC_FULL
  *   - All imported functions are called with safe parameters

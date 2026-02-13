@@ -13,8 +13,6 @@ INT main(){
     _inf("Fake Import System - PROFILE_NETWORK");
 #elif defined(PROFILE_SYSTEM)
     _inf("Fake Import System - PROFILE_SYSTEM");
-#elif defined(PROFILE_MEDIA)
-    _inf("Fake Import System - PROFILE_MEDIA");
 #elif defined(PROFILE_EXPLORER)
     _inf("Fake Import System - PROFILE_EXPLORER");
 #endif

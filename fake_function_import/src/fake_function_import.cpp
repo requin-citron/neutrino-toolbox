@@ -24,10 +24,6 @@ extern VOID execute_network_profile();
 extern VOID execute_system_profile();
 #endif
 
-#ifdef PROFILE_MEDIA
-extern VOID execute_media_profile();
-#endif
-
 #ifdef PROFILE_EXPLORER
 extern VOID execute_explorer_profile();
 #endif
@@ -61,11 +57,6 @@ VOID execute_fake_imports() {
     _dbg("Executing PROFILE_SYSTEM fake imports");
     execute_system_profile();
 
-#elif defined(PROFILE_MEDIA)
-    // Execute media application profile
-    _dbg("Executing PROFILE_MEDIA fake imports");
-    execute_media_profile();
-
 #elif defined(PROFILE_EXPLORER)
     // Execute file explorer profile
     _dbg("Executing PROFILE_EXPLORER fake imports");
@@ -73,7 +64,7 @@ VOID execute_fake_imports() {
 
 #else
     // No profile selected - compile error
-    #error "No profile selected. Define one of: PROFILE_DOCUMENT, PROFILE_NETWORK, PROFILE_SYSTEM, PROFILE_MEDIA, PROFILE_EXPLORER"
+    #error "No profile selected. Define one of: PROFILE_DOCUMENT, PROFILE_NETWORK, PROFILE_SYSTEM, PROFILE_EXPLORER"
 #endif
 
     _dbg("Fake imports execution completed");
