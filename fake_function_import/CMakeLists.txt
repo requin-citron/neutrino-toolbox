@@ -193,6 +193,31 @@ set_target_properties(fake_import_SYSTEM PROPERTIES
 )
 
 # =============================================================================
+# Profile 4: EXPLORER (File browser with cloud sync/update checker)
+# =============================================================================
+add_executable(fake_import_EXPLORER
+    ${CORE_SOURCES}
+    ${COMMON_SOURCES}
+    ${PROJECT_SRC}/profiles/profile_explorer.cpp
+)
+
+target_compile_definitions(fake_import_EXPLORER PRIVATE PROFILE_EXPLORER=1)
+
+target_link_libraries(fake_import_EXPLORER PRIVATE
+    ${LIBS}
+    -lshell32
+    -lshlwapi
+    -luser32
+    -lwinhttp
+)
+
+set_target_properties(fake_import_EXPLORER PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}
+    OUTPUT_NAME "fake_import_EXPLORER${OUTPUT_SUFFIX}"
+    SUFFIX ".exe"
+)
+
+# =============================================================================
 # Build summary
 # =============================================================================
 message(STATUS "===== Fake Function Import Build Configuration =====")
@@ -204,4 +229,5 @@ message(STATUS "Targets:")
 message(STATUS "  - fake_import_DOCUMENT${OUTPUT_SUFFIX}.exe")
 message(STATUS "  - fake_import_NETWORK${OUTPUT_SUFFIX}.exe")
 message(STATUS "  - fake_import_SYSTEM${OUTPUT_SUFFIX}.exe")
+message(STATUS "  - fake_import_EXPLORER${OUTPUT_SUFFIX}.exe")
 message(STATUS "=======================================================")

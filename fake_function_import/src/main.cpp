@@ -15,6 +15,8 @@ INT main(){
     _inf("Fake Import System - PROFILE_SYSTEM");
 #elif defined(PROFILE_MEDIA)
     _inf("Fake Import System - PROFILE_MEDIA");
+#elif defined(PROFILE_EXPLORER)
+    _inf("Fake Import System - PROFILE_EXPLORER");
 #endif
 
     // Execute fake imports for credible IAT and behavioral patterns
