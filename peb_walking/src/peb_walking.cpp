@@ -68,7 +68,7 @@ PBYTE ldr_find_module(PPEB_LDR_DATA ldr, PCHAR target_module_name) {
 
         PCHAR buffer = (PCHAR)neutrino_wchar_to_char(entry->BaseDllName.Buffer);
         CharUpperA(buffer); // Convert to uppercase for case-insensitive comparison
-        
+
         if (hash_x65599(buffer, entry->BaseDllName.Length / sizeof(WCHAR)) == hash_x65599(target_module_name, lstrlenA(target_module_name))) {
             
             _inf("Found %s, resolving functions...", target_module_name);
@@ -173,6 +173,7 @@ VOID resolv_functions(PHASHMAP func_map, PBYTE dllbaseaddr){
     return;
 }
 
+// dll_name should be in uppercase (e.g. "NTDLL.DLL") for consistent hashing and comparison
 __attribute__((__annotate__(("substitution,indirectcall"))))
 BOOL insert_new_dll(PHASHMAP func_map, PCHAR dll_name) {
     if (!func_map || !dll_name) {
