@@ -67,6 +67,8 @@ PBYTE ldr_find_module(PPEB_LDR_DATA ldr, PCHAR target_module_name) {
         PLDR_DATA_TABLE_ENTRY entry = CONTAINING_RECORD(curr, LDR_DATA_TABLE_ENTRY, InLoadOrderLinks);
 
         PCHAR buffer = (PCHAR)neutrino_wchar_to_char(entry->BaseDllName.Buffer);
+        CharUpperA(buffer); // Convert to uppercase for case-insensitive comparison
+        
         if (hash_x65599(buffer, entry->BaseDllName.Length / sizeof(WCHAR)) == hash_x65599(target_module_name, lstrlenA(target_module_name))) {
             
             _inf("Found %s, resolving functions...", target_module_name);

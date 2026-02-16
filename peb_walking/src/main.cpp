@@ -54,14 +54,14 @@ INT main(){
     // PVOID toto = hashmap_get(func_map, (PVOID)xorstr_("NetWkstaGetInfo"), 16); // Test get existing key
 
 
-    insert_new_dll(func_map, xorstr_("ntdll.dll"));
+    insert_new_dll(func_map, xorstr_("NTDLL.DLL"));
     _inf("---------------------------");
-    insert_new_dll(func_map, xorstr_("KERNELBASE.dll"));
+    insert_new_dll(func_map, xorstr_("KERNELBASE.DLL"));
     _inf("---------------------------");
-    insert_new_dll(func_map, xorstr_("KERNEL32.dll"));
-    insert_new_dll(func_map, xorstr_("NETUTILS.dll"));
-    insert_new_dll(func_map, xorstr_("IPHLPAPI.dll"));
-    insert_new_dll(func_map, xorstr_("NETAPI32.dll"));
+    insert_new_dll(func_map, xorstr_("KERNEL32.DLL"));
+    insert_new_dll(func_map, xorstr_("NETUTILS.DLL"));
+    insert_new_dll(func_map, xorstr_("IPHLPAPI.DLL"));
+    insert_new_dll(func_map, xorstr_("NETAPI32.DLL"));
     
 #if _DEBUG == 1
     // hashmap_print(func_map);
